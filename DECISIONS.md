@@ -42,5 +42,9 @@ Like-for-like: D7 **+2.4 pts** (not 4.7, which is week 1 only) = **+Rs 6.2 L/mon
 ## 5. Not built
 1. Auto-forgiving travel/"forgot" days (revenue, product promise). 2. A 2-minute-total rule (breaks short lessons). 3. Free freezes for existing users, or Streak Repair (bounded loss, unproven gain).
 
-## 6. Scale (2M users)
-Append-only log partitioned by user, idempotent on `(event_id, payload_hash)`. Materialise one row per `(user, local_day)`; a late event touches <=7 days, so recompute only those. Timezone-bucketed scheduler fires midnight/+48 h transitions; offers and support read the same day table. Per-user partitioning removes ordering races; the pure engine makes replay a batch job. Version the rules on every day row.
+## 6. Scale (2M users, not built)
+- **Store:** append-only event log partitioned by `user_id`; idempotent write on `(event_id, payload_hash)`.
+- **Read model:** one row per `(user, local_day)` with verdict and reason. A late event only touches days inside the offline window, so recompute at most 7 days, never full history.
+- **Time-based changes:** midnight and +48 h transitions come from a timezone-bucketed scheduler ("whose midnight just passed"), not a per-request scan. Reminders, freeze offers and the support view all read the same day table.
+- **Ordering and replay:** one partition per user removes ordering races; the pure engine makes backfills (outages, rule changes) a batch replay.
+- **Serving and audit:** cache `GET /streak` by user and as-of bucket; store the rules version on every day row so any rule change is auditable.
