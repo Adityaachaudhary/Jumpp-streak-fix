@@ -1,0 +1,6 @@
+# Recording guide (5 minutes, one take) - YOU must do this part
+
+1. **Where a lesson is assigned to a day:** `streaks/engine.py`, function `assign_local_day` (line ~149). Say: day = local date at lesson start in the device's timezone; trusted lessons use client time, rejected ones use server receipt time.
+2. **Change the rule:** `streaks/config.py` line 13: `MAX_OFFLINE_DELAY_HOURS = 7 * 24` -> `36`. (Used in `classify_trust`, `engine.py` line ~93.)
+3. **Before running, predict out loud.** Delays in the data: u03's 12 Nov lesson 37.7 h, u06's 8 Nov claim 48 h, u06's 9 Nov claim 24 h, u13 24.1 h, u14 23.9 h, u07 14.7 h, u03's 10 Nov 19.5 h. Expected: **u03 changes (26 -> 2)** because 37.7 h > 36 h and she is free with no freeze; **u06's streak does NOT change (5)**, only the 8 Nov reason code switches from `MISSED_BACKDATE_UNPUBLISHED` to `MISSED_BACKDATE_TOO_OLD`; u13/u14/u07 stay. (Say this in your own words, and say why.)
+4. **Run:** `python -m streaks csv --out /tmp/new.csv && diff streaks_as_of_2026-11-15T1000IST.csv /tmp/new.csv` and show only u03 and u06's reason text differ. (Revert the edit afterwards; `tests/test_late_sync.py::test_36h_limit_changes_only_u03` asserts the same.)

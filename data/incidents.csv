@@ -1,0 +1,2 @@
+incident_id,start_utc,end_utc,description
+inc_2026_11_09,2026-11-09T15:15:00Z,2026-11-09T16:20:00Z,POST /v1/events 503 (app 3.2.0 does not retry; events in window lost)

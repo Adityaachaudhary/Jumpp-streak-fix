@@ -1,0 +1,16 @@
+user_id,current_streak,status,reason
+u01,12,AT_RISK,12-day streak through 2026-11-14; today's lesson is still due.
+u02,54,AT_RISK,54-day streak through 2026-11-13; today's lesson is still due.
+u03,26,AT_RISK,26-day streak through 2026-11-14; today's lesson is still due.
+u04,0,BROKEN,No active streak. A 25-day streak ended 06 Nov: MISSED_SWIPE_ONLY (same on 8 more days).
+u05,20,AT_RISK,20-day streak through 2026-11-14; today's lesson is still due.
+u06,5,AT_RISK,5-day streak through 2026-11-14; today's lesson is still due. A 40-day streak ended 08 Nov: MISSED_BACKDATE_UNPUBLISHED (same on 1 more day).
+u07,72,AT_RISK,72-day streak through 2026-11-14; today's lesson is still due.
+u08,313,AT_RISK,313-day streak through 2026-11-14; today's lesson is still due. Protected (adds 0): outage 09 Nov.
+u09,2,AT_RISK,2-day streak through 2026-11-14; today's lesson is still due.
+u10,23,AT_RISK,23-day streak through 2026-11-14; today's lesson is still due.
+u11,3,AT_RISK,3-day streak through 2026-11-14; today's lesson is still due. A 13-day streak ended 11 Nov: MISSED_START_ONLY.
+u12,9,AT_RISK,9-day streak through 2026-11-14; today's lesson is still due. A 19-day streak ended 05 Nov: MISSED_NO_ACTIVITY.
+u13,58,AT_RISK,58-day streak through 2026-11-14; today's lesson is still due.
+u14,65,AT_RISK,65-day streak through 2026-11-14; today's lesson is still due.
+u15,30,AT_RISK,30-day streak through 2026-11-14; today's lesson is still due. Protected (adds 0): travel date-skip 10 Nov.
