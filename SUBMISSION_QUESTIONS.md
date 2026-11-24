@@ -1,85 +1,50 @@
-# Submission questions (required, ~20–25 minutes)
+# DECISIONS.md: streaks-v2
+*Snapshot 15 Nov 2026 10:00 IST. Reproduce: `python -m streaks csv`, `python scripts/*.py`. Rules: `streaks/config.py`; one reason code per day: `streaks/engine.py`.*
 
-Thanks for doing the take-home. Please answer these and include them with your submission, as `SUBMISSION_QUESTIONS.md` in your repo or as a separate file in your reply.
-
-**Why we ask.** AI tools are welcome on this task and using them costs you nothing. We want to understand *how* you worked: what you checked, what you decided, and what you'd do differently. There are no trick answers. "I don't know" and "I didn't check that" are perfectly good answers. Honest and short beats polished and long. Your answers will be the starting point for the technical call.
-
-**Please write the answers yourself, without AI** (Q3 onwards). Transcripts and logs in Q1 obviously come from your tools. If you do use AI for any answer, say so in Q19; that's fine, we just need to know.
-
-You may open your own code and files while answering, unless a question says "from memory". For those, answer first, then check if you like. Don't change your first answer; add a correction next to it instead.
-
----
-
-## Part A: How you worked
-
-**Q1. AI transcripts.** Attach the full export of every AI chat or agent session you used for this task (ChatGPT/Claude share links or exports, Cursor or Claude Code session logs, etc.), unedited. If some help left no transcript (e.g. inline autocomplete), name the tool and roughly how much you used it. If you used no AI, write "none".
-
-**Q2. Time.** When did you start and finish (date and time)? Roughly how many hours in total, and how did they split?
-
-| Activity | Hours |
-|---|---|
-| Reading the brief, thread, tickets | |
-| Exploring the data | |
-| Deciding rules / writing DECISIONS.md | |
-| Writing or reviewing code | |
-| Testing and checking results | |
-| TICKETS.md and the reply to Pooja | |
-| Recording | |
-
-Going over 3 hours is fine. Just tell us.
-
-**Q3. Who wrote what.** Rough % of the *first draft* written by AI, for (a) the code, (b) DECISIONS.md, and (c) the ticket replies. Then: how much did you change afterwards (a little / a lot / rewrote)?
-
-## Part B: Your submission
-
-**Q4. From memory:** which *user* was the hardest to get right, and why? (2–3 sentences)
-
-**Q5.** Where in your code is (a) the place a lesson gets assigned to a calendar day, and (b) your duplicate handling? Give the file, function and approximate line for each.
-
-**Q6.** Name one `event_id` you looked at by hand, and what you were checking when you looked at it.
-
-**Q7. From memory:** what are **u07's** and **u15's** streaks in your CSV? For each, give your confidence (0–100%). Then check your CSV and write down whether you were right.
-
-## Part C: Checking the AI's work
-
-**Q8. Validation.** List the concrete steps you took to check that the output (code, numbers, ticket diagnoses) was correct: commands you ran, tests you wrote or read, things you compared by hand. For each step, tell us where we can see the evidence (a test name, commit, file, or the moment in your transcript).
-
-**Q9.** Paste one suggestion from the AI (code or text) that you **rejected or changed**, and say why in one or two sentences. If there wasn't one, say so.
-
-**Q10.** Describe one thing the AI got **wrong** that *you* caught: what it was, how you noticed, and where the fix is. If you didn't catch any, say so. That's an honest answer, and we'll talk about it.
-
-**Q11.** One decision you **changed your mind** on during the task: what you thought before, what you decided after, and what made you change.
-
-## Part D: Self-assessment
-
-**Q12.** For each statement, answer **1** (strongly disagree) to **5** (strongly agree). Go with your first reaction.
-
-| # | Statement | 1–5 |
+## 1. Rules
+| Question | Decision | Evidence |
 |---|---|---|
-| a | I read every line of code in my submission. | |
-| b | The AI made no mistakes on this task. | |
-| c | Some of my stakeholder decisions could reasonably have gone the other way. | |
-| d | I verified every number in DECISIONS.md myself. | |
-| e | There's at least one part of my submission I'm not sure is correct. | |
-| f | I have never shipped code I didn't fully understand. | |
-| g | I could rebuild the core streak logic without AI in a working day. | |
-| h | I'd be comfortable changing any rule in my code live, on a call, today. | |
+| Learning day | One lesson watched to **>=80%** OR **>=120 s** real watching (views <25% earn 0 s; same video once). | Lessons are 75-165 s so "2 min" alone fails honest users (u10: 101/104 s). u04 swiped 2-7 s on 9 days: fails. |
+| Whose day | User's **local date when the lesson started**, in the device's timezone. | u02 IST->PT: no gap. u05 started 23:59:05, so it counts on the 9th. |
+| Which clock | Server `received_at`. `client_ts` only for a late sync that passes the checks below; otherwise credit at receipt. | Sameer vs Neha. |
+| Late sync | Late = >15 min. Reject if >7 days, or lesson **not yet published** at claimed time. On 3.2.0 accept if last `queue_depth` >= batch size ("verified"), reject if smaller. Old app: accept "unverified", max 3 per 30 days. | u13/u14/u07 verified; u03 unverified; u06 rejected (v037 published 10 Nov, claimed 8-9 Nov; queue_depth=0 vs 6 events). |
+| Duplicates | Dedupe by `event_id` and by content; earliest receipt wins, so arrival order never matters. | u03 10 Nov. |
+| Freezes | Bridge, add 0. Freeze applied to a day that was learned is not consumed and is refunded (u07, Rs 49). None burned with no streak. | Ritika. |
+| Outage | Affected user, no lesson: protected, adds 0, no freeze. | u08 = 313, not 314. |
+| Travel | Westbound: local dates line up. Eastbound **date skipped** by a tz change (u15, lessons 27 h apart): bridged, adds 0, only if <=48 h apart. Forgetting while travelling: not forgiven. | Neha vs Ritika: Ritika on forgetting, Neha only on a calendar artefact. |
+| "Now" | Only `received_at <= as_of` exists. u02's 14 Nov PT lesson arrives 10:31 IST, so u02 = **54**, 55 an hour later. | |
 
-**Q13.** Rate from 1 to 10: (a) the quality of the AI's work on this task, and (b) the quality of your own contribution. One sentence each on why. Then: if the AI had done the task completely alone, what would it most likely have got wrong?
+**Wrong if:** support reopens >2% of closed tickets on these rules, or unverified-sync users' streak lengths differ sharply from verified ones.
 
-**Q14.** Which *ticket* took you the longest, and why? (1–2 sentences)
+## 2. Unverifiable offline syncs (u13, u14): accept both
+Both are 3.2.0, lesson published weeks earlier, `queue_depth=3` for a batch of exactly 3: verified. u13 = 58, u14 = 65. (`scripts/unverified_sync_cost.py`, 90,000 syncs/month, 60% streak-relevant, 10% premium.)
+- Wrongly rejecting an honest user = Rs 39.7; wrongly accepting a fake = Rs 14.8.
+- At 11.5% fake: reject-all **Rs 19.0 L/month** vs accept-all **Rs 1.5 L**. At 25%: **Rs 16.1 L** vs **Rs 3.3 L**. Break-even **62% fakes**.
+- **Change policy if** audited fakes among corroborated syncs exceed ~30% or cap hits climb.
 
-**Q15.** Which part of your submission are you **least confident** in? Pick one: the u13/u14 policy, the missed-day timeline, the beta call, the reply to Pooja, or a specific ticket. What result in the real world would show you were wrong?
+## 3. The missed day, hour by hour (executable: `GET /users/{id}/missed-day`)
+Key signal: first online `app_open` after midnight; `queue_depth=0` proves nothing is waiting.
+| | Midnight | Next morning | +24h | +48h |
+|---|---|---|---|---|
+| (a) lesson unsynced | Phone: "saved, counts when online". No push. | Synced: +1. Offline: "pending", streak shown. **No freeze offered.** | Pending; neutral sync nudge at most. | Stays pending up to offline limit. Never a "lost" push. |
+| (b) free, forgot | PENDING, not "missed". No push. | `queue_depth=0` open: **Freeze offer #1** (Rs 0 if allowance left, else Rs 49); push 09:00. | **Offer #2** (last). | Streak resets; the only "ended" push. |
+| (c) premium, 1 Freeze | PENDING. | Freeze **auto-used**. | If unconfirmed, auto-used now; returned if a lesson later syncs. | Nothing new; adds 0. |
 
-## Part E: Limits
+**Ritika's 58%** is mostly mix: weeks 1-4 had **1.0% premium in v2 vs 8.9% in control**. Like-for-like (weeks 5-10) it is **-35%**. Offering on confirmed miss restores the purchase moment; I **assume** it recovers ~2/3 (to test).
+**Free freezes for new users:** the first **2** Freezes are free for *new* free users (signed up <=30 days ago), then Rs 49; existing users are untouched (`free_freeze_allowance`, `new_user_window_days`; changes the price shown, not streak maths). Cost <= Rs 13 per new user per quarter; giving all existing users 3-5 would risk up to Rs 45-135 L. Test 2 vs 0 on new users.
 
-**Q16.** Why did u11's app stop on 11 Nov (a `video_start` with no `video_end`)? Answer in one or two sentences.
+**Reminders (Duolingo-style, `GET /users/{id}/reminders`):** if the user hasn't learned yet today, up to 3 pushes in *their* local evening: at their usual lesson time (clamped 16-20h), 21:00 "streak ends at midnight", 22:30 last call (streak >=3). Suppressed if already learned, if the phone reports unsynced events, before 08:00, or once the slot has passed. No Freeze sales in reminders; that offer belongs to the missed-day flow.
 
-**Q17.** What is the weakest rule or threshold in your submission, and how would you choose it properly if you had real production data?
+## 4. The beta: don't ship as-is
+Like-for-like: D7 **+2.4 pts** (not 4.7, which is week 1 only) = **+Rs 6.2 L/month**; freezes **-35% = -Rs 15.7 L/month**; net **-Rs 9.5 L**. With the assumed recovery: ~+Rs 1 L.
+**Experiment:** 3.2.x users, plan-balanced: control / v2 / v2 + offer-on-confirmed-miss. Primary: D7; also freezes per 1,000 and tickets. 4 weeks enrolment + 14 days (~36k per arm detects a 10% purchase change). **Stop if** purchases >20% below control after 2 weeks, D7 gain <+1 pt, or "streak broke" tickets rise.
 
-**Q18.** Is there anything you'd like to flag before we read your submission? For example something unfinished, something you're unsure about, or something the AI produced that you didn't check. Flagging something here never costs points.
+## 5. Not built
+1. Auto-forgiving travel/"forgot" days (revenue, product promise). 2. A 2-minute-total rule (breaks short lessons). 3. Free freezes for existing users, or Streak Repair (bounded loss, unproven gain).
 
-**Q19. Declaration.** Were Q3–Q18 written by you without AI? **Yes / Partly / No.** If partly, which ones and how.
-
----
-*Thank you. We read every answer. The call will start from what you wrote here, so please make sure it's yours.*
+## 6. Scale (2M users, not built)
+- **Store:** append-only event log partitioned by `user_id`; idempotent write on `(event_id, payload_hash)`.
+- **Read model:** one row per `(user, local_day)` with verdict and reason. A late event only touches days inside the offline window, so recompute at most 7 days, never full history.
+- **Time-based changes:** midnight and +48 h transitions come from a timezone-bucketed scheduler ("whose midnight just passed"), not a per-request scan. Reminders, freeze offers and the support view all read the same day table.
+- **Ordering and replay:** one partition per user removes ordering races; the pure engine makes backfills (outages, rule changes) a batch replay.
+- **Serving and audit:** cache `GET /streak` by user and as-of bucket; store the rules version on every day row so any rule change is auditable.
