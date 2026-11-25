@@ -4,7 +4,7 @@
 ## Part A: How I worked
 
 **Q1. AI transcripts.**
-I used Copilot and ChatGPT for this whole task. The full, unedited chat export is attached: [[https://chatgpt.com/c/6b0527c6-88a8-83ee-bcf5-3bb4de213f6b]]. 
+I used Copilot and ChatGPT for this whole task. The full, unedited chat export is attached: https://chatgpt.com/share/6b067e51-ee78-83ec-bd21-6fedd971c00a 
 
 **Q2. Time.**
 Started: [[date, time]]. Finished: [[date, time]]. Total: about [[4]] hours.
